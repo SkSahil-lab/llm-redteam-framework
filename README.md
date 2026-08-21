@@ -10,9 +10,12 @@ Most people learning AI security only ever see one side of it — either how to 
 
 ```
 llm-redteam-framework/
-├── day01-setup/                        # Deliberately vulnerable target app + Docker setup
-├── day02-llm01-prompt-injection/       # LLM01: system prompt leak via keyword-triggered override
-├── TAXONOMY.md                         # Running log of every attack, surface, and result
+├── day01-setup/                              # Deliberately vulnerable target app + Docker setup
+├── day02-llm01-prompt-injection/              # LLM01: system prompt leak via keyword-triggered override
+├── day03-llm02-sensitive-info-disclosure/     # LLM02: internal DB config leaked via unhandled exception
+├── day04-llm03-supply-chain/                  # LLM03: compromised dependency silently exfiltrates data
+├── day05-llm04-data-poisoning/                # LLM04: unverified knowledge writes served as fact
+├── TAXONOMY.md                                # Running log of every attack, surface, and result
 └── README.md
 ```
 
@@ -23,6 +26,9 @@ Each `dayNN-*` folder is self-contained: its own `app.py`, `Dockerfile`, and `re
 | Day | OWASP Category | Result |
 |---|---|---|
 | 2 | LLM01 Prompt Injection | 1-sentence trigger phrase caused full system prompt + fake internal API key disclosure — no trust boundary between system instructions and user input |
+| 3 | LLM02 Sensitive Information Disclosure | An empty message crashed the app; unhandled exception leaked a fake internal database connection string in the error response — verbose error handling with no sanitization |
+| 4 | LLM03 Supply Chain | Simulated a compromised third-party dependency update — silently exfiltrated user input and container environment variables while returning a normal-looking response. No version pinning, no integrity check caught it |
+| 5 | LLM04 Data and Model Poisoning | Planted a false "fact" via an unverified knowledge-base endpoint with zero review; a completely unrelated user query was then served the poisoned answer with full confidence — no approval workflow, no source tracking |
 
 *(Table updates daily — see [TAXONOMY.md](./TAXONOMY.md) for full detail on every finding.)*
 
@@ -58,7 +64,7 @@ This repo is Phase 1 of a 3-phase build:
 
 ## About the target app
 
-`app.py` in each folder is a deliberately naive LLM-application simulation — no real model inference, just the same category of trust-boundary flaws a real LLM integration would have (no separation between system instructions and user input, verbose error handling, etc.). This keeps the range free to run and fast to iterate on, while preserving the actual security lesson.
+`app.py` in each folder is a deliberately naive LLM-application simulation — no real model inference, just the same category of trust-boundary flaws a real LLM integration would have (no separation between system instructions and user input, verbose error handling, unvetted knowledge writes, etc.). This keeps the range free to run and fast to iterate on, while preserving the actual security lesson.
 
 ---
 Built and documented daily as part of a public AI AppSec learning sprint. Findings and write-ups also posted on [LinkedIn](#).
