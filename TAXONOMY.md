@@ -1,9 +1,15 @@
-# Attack Taxonomy — OWASP LLM Top 10
+# Attack Taxonomy — OWASP GenAI/LLM Top 10 (2026 Edition)
 
-| Day | Folder | Category | Attack Surface | Result |
-|---|---|---|---|---|
-| 2 | day02-llm01-prompt-injection | LLM01 Prompt Injection | /chat endpoint | Trigger words ("ignore", "reveal", "api key") cause system prompt + fake API key leak — no separation between trusted instructions and user input |
-| 3 | day03-llm02-sensitive-info-disclosure | LLM02 Sensitive Information Disclosure | /chat endpoint (empty message triggers crash) | Unhandled exception exposes internal DB connection string in error response — verbose error handling with no sanitization |
-| 4 | day04-llm03-supply-chain | LLM03 Supply Chain | plugin.py dependency (unpinned, no integrity check) | Simulated malicious plugin update silently exfiltrated user input + environment variables while returning a normal-looking response — no version pinning, no checksum verification caught the compromise |
-| 5 | day05-llm04-data-poisoning | LLM04 Data and Model Poisoning | /teach endpoint (unverified knowledge-base writes) | Planted a false "refund policy" fact with zero review or approval; a completely separate, unrelated user query then received the poisoned answer with full confidence, indistinguishable from legitimate data — no vetting, no source tracking, no anomaly detection on knowledge-base writes |
-| 6 | day06-llm05-improper-output-handling | LLM05 Improper Output Handling | /render-review endpoint (LLM output inserted into HTML with no escaping) | Injected a review containing a `<script>` tag; the browser executed it as real code (working alert popup), proving LLM-generated text was trusted and rendered as raw HTML with zero sanitization — the same pattern behind real-world session-cookie theft and account hijacking |
+This framework is aligned to the **OWASP Top 10 for LLM Applications — 2026 Release**. Category numbers below reflect the 2026 revision, not the 2023/2025 editions — see [`OWASP_VERSION_NOTES.md`](./OWASP_VERSION_NOTES.md) for what changed and why some day numbers don't match the category numbers 1-to-1.
+
+| Day | Folder | 2026 Category | Attack Surface | Result | Status |
+|---|---|---|---|---|---|
+| 2 | day02-llm01-prompt-injection | LLM01 Prompt Injection | /chat endpoint | Trigger words ("ignore", "reveal", "api key") cause system prompt + fake API key leak — no separation between trusted instructions and user input | ✅ Complete |
+| 3 | day03-llm02-sensitive-info-disclosure | LLM02 Sensitive Information Disclosure | /chat endpoint (empty message triggers crash) | Unhandled exception exposes internal DB connection string in error response — verbose error handling with no sanitization | ✅ Complete |
+| 4 | day04-llm03-supply-chain | LLM04 Supply Chain | plugin.py dependency (unpinned, no integrity check) | Simulated malicious plugin update silently exfiltrated user input + environment variables while returning a normal-looking response — no version pinning, no checksum verification caught the compromise | ✅ Complete |
+| 5 | day05-llm04-data-poisoning | LLM05 Data and Model Poisoning | /teach endpoint (unverified knowledge-base writes) | Planted a false "refund policy" fact with zero review or approval; a completely separate, unrelated user query then received the poisoned answer with full confidence — no vetting, no source tracking | ✅ Complete |
+| 6 | day06-llm05-improper-output-handling | LLM10 Improper Output Handling | /render-review endpoint (LLM output inserted into HTML with no escaping) | Injected a review containing a `<script>` tag; the browser executed it as real code, proving LLM-generated text was trusted and rendered as raw HTML with zero sanitization | ✅ Complete |
+| 7 | day07-llm06-excessive-agency | LLM03 Excessive Agency | /agent endpoint (tool-calling with no permission checks) | Agent processed a $999,999 refund and a full account deletion from single unverified requests — no amount cap, no identity verification, no human-in-the-loop confirmation before executing irreversible actions | 🔄 In progress |
+| 8 | day08-llm08-hidden-context-exposure | LLM08 Hidden Context Exposure | TBD | TBD | ⏳ Not started |
+| 9 | day09-llm06-unbounded-consumption + llm07-misinformation | LLM06 Unbounded Consumption + LLM07 Misinformation | TBD | TBD | ⏳ Not started |
+| 10 | day10-llm09-vector-embedding-weaknesses | LLM09 Vector and Embedding Weaknesses | TBD | TBD | ⏳ Not started |
